@@ -14,7 +14,7 @@ extensions = [
         libraries = ['lsdslam'],
         library_dirs = ['lsd_slam/lsd_slam_core/lib'],
         extra_link_args="",
-        extra_compile_args="",
+        extra_compile_args=["-std=c++11"],
         language="c++")
 ]
 

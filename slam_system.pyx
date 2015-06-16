@@ -4,6 +4,8 @@ from Eigen import Matrix3f
 cdef extern from "SlamSystem.h" namespace "lsd_slam":
     ctypedef struct Output3DWrapper:
         pass
+    ctypedef struct Frame:
+        pass
 
     cdef cppclass SlamSystem:
         SlamSystem(int, int, Matrix3f, bool) except +
@@ -15,3 +17,4 @@ cdef extern from "SlamSystem.h" namespace "lsd_slam":
         
         void setVisualization(Output3DWrapper*)
         
+        Frame* getCurrentKeyframe()
