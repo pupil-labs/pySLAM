@@ -4,9 +4,9 @@ from Cython.Build import cythonize
 
 extensions = [
     Extension( 
-        name="pySLAM.slam_system",
+        name="pySLAM",
         # TODO: add source dir
-        sources=['slam_system.pyx'],
+        sources=['pySLAM.pyx'],
         include_dirs = [
                         'lsd_slam/lsd_slam_core/src',
                         'lsd_slam/lsd_slam_core/thirdparty/Sophus', 
