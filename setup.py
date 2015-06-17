@@ -13,7 +13,7 @@ extensions = [
                         '/usr/include/eigen3'],
         libraries = ['lsdslam'],
         library_dirs = ['lsd_slam/lsd_slam_core/lib'],
-        extra_link_args="",
+        extra_link_args=['-Wl,-Rlsd_slam/lsd_slam_core/lib,-R/usr/local/lib'],
         extra_compile_args=["-std=c++11"],
         language="c++")
 ]

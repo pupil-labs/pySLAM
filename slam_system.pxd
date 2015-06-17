@@ -1,12 +1,12 @@
 from libcpp.string cimport string
 from io_wrapper cimport Output3DWrapper
 
-#cdef extern from "<Eigen/Eigen.h>" namespace "Eigen":
-    
+cdef extern from "<Eigen/Eigen>" namespace "Eigen":
+    ctypedef struct Matrix3f:
+        pass 
 
 cdef extern from "SlamSystem.h" namespace "lsd_slam":
-    ctypedef struct Matrix3f:
-        pass
+
     
     #ctypedef struct Output3DWrapper:
     #    pass
