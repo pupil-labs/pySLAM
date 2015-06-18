@@ -1,19 +1,24 @@
 from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Build import cythonize
-
+import numpy as np
 extensions = [
     Extension( 
         name="pySLAM",
-        # TODO: add source dir
         sources=['pySLAM.pyx'],
-        include_dirs = [
+        include_dirs = [ np.get_include(),
                         'lsd_slam/lsd_slam_core/src',
                         'lsd_slam/lsd_slam_core/thirdparty/Sophus', 
                         '/usr/include/eigen3'],
+        #include_dirs = [ np.get_include(),
+        #          '../lsd_slam_noros/lsd_slam',
+        #          '../lsd_slam_noros/thirdparty/Sophus', 
+        #          '/usr/include/eigen3'],
         libraries = ['lsdslam'],
         library_dirs = ['lsd_slam/lsd_slam_core/lib'],
+        #library_dirs = ['../lsd_slam_noros/lib'],
         extra_link_args=['-Wl,-Rlsd_slam/lsd_slam_core/lib,-R/usr/local/lib'],
+        #extra_link_args=['-Wl,-R../lsd_slam_noros/lib,-R/usr/local/lib'],
         extra_compile_args=["-std=c++11"],
         language="c++")
 ]
