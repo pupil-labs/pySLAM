@@ -1,3 +1,0 @@
-[submodule "lsd_slam"]
-	path = lsd_slam
-	url = https://github.com/thorikawa/lsd_slam.git
