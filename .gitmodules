@@ -1,0 +1,3 @@
+[submodule "lsd_slam"]
+	path = lsd_slam
+	url = https://github.com/MichaelBarz/lsd_slam.git
