@@ -46,7 +46,7 @@ cdef class Slam_Context:
         sls.allowNegativeIdepths = True
         sls.useSubpixelStereo = True
         sls.useAffineLightningEstimation = False
-        sls.multiThreading = True
+        sls.multiThreading = False
         
         sls.maxLoopClosureCandidates = 10 #0, 50
         sls.loopclosureStrictness = 1.5 #0.0, 100

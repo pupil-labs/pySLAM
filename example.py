@@ -30,7 +30,7 @@ f = files.pop(0)
 print f
 img = cv2.imread(f, cv2.CV_LOAD_IMAGE_GRAYSCALE)
 #img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-#img = undistorter.undistort(img)
+img = undistorter.undistort(img)
 print img.shape
 
 system = pySLAM.Slam_Context(img.shape[1],img.shape[0], K.flatten())
@@ -43,8 +43,8 @@ for f in files:
     print f
     img = cv2.imread(f, cv2.CV_LOAD_IMAGE_GRAYSCALE)
     #img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    #img = undistorter.undistort(img)
-    system.track_frame(img,x,x/60,True) 
+    img = undistorter.undistort(img)
+    system.track_frame(img,x,x/30.,False)
 duration = time() - ts
 
 print "DURATION"
