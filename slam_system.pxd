@@ -1,11 +1,14 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector 
-from io_wrapper cimport Output3DWrapper
 
 cdef extern from "<Eigen/Eigen>" namespace "Eigen":
     cdef cppclass Matrix3f:
         Matrix3f() except + 
         Matrix3f(int rows, int cols) except + 
+        float * data()
+    cdef cppclass Vector3f:
+        Vector3f() except + 
+        Vector3f(int rows, int cols) except + 
         float * data()
         
 cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
@@ -121,7 +124,33 @@ cdef extern from "SlamSystem.h" namespace "lsd_slam":
         float msTrackFrame, msOptimizationIteration, msFindConstraintsItaration, msFindReferences
         int nTrackFrame, nOptimizationIteration, nFindConstraintsItaration, nFindReferences
         float nAvgTrackFrame, nAvgOptimizationIteration, nAvgFindConstraintsItaration, nAvgFindReferences
+
+cdef extern from "<IOWrapper/Output3DWrapper.h>" namespace "lsd_slam":
+    ctypedef struct Frame:
+        pass
+    
+    cdef cppclass Output3DWrapper:
+        pass
+ 
+cdef extern from "SimpleOutput3DWrapper.h" namespace "lsd_slam":
+    ctypedef struct Frame:
+        pass
+ 
+    cdef cppclass SimpleOutput3DWrapper(Output3DWrapper):
+        void publishKeyframe(Frame* kf)
+          
+        void publishTrackedFrame(Frame* kf)
+          
+        void publishTrajectory(vector[Vector3f] trajectory, string identifier)
+        void publishTrajectoryIncrement(Vector3f pt, string identifier)
+  
+        void test()
+        #void publishDebugInfo(Eigen::Matrix<float, 20, 1> data)
         
+        @staticmethod
+        SimpleOutput3DWrapper* getInstance()
+
+
 cdef extern from "<util/Undistorter.h>" namespace "lsd_slam":
     cdef cppclass Undistorter:
         Undistorter() except +

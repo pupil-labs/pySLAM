@@ -34,6 +34,7 @@ img = undistorter.undistort(img)
 print img.shape
 
 system = pySLAM.Slam_Context(img.shape[1],img.shape[0], K.flatten())
+print "was here"
 system.init(img,0,0)
 ts = time()
 x = 0

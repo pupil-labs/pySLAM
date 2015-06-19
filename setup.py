@@ -5,7 +5,7 @@ import numpy as np
 extensions = [
     Extension( 
         name="pySLAM",
-        sources=['pySLAM.pyx'],
+        sources=['pySLAM.pyx', 'SimpleOutput3DWrapper.cpp'],
         include_dirs = [ np.get_include(),
                         'lsd_slam/lsd_slam_core/src',
                         'lsd_slam/lsd_slam_core/thirdparty/Sophus', 

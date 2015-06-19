@@ -4,9 +4,13 @@ import numpy as np
 
 cdef class Slam_Context:
     cdef slam.SlamSystem *thisptr
+    cdef slam.Output3DWrapper* vis
     
     def __cinit__(self, int w, int h,float[::1] K, enableSLAM=True):
         self.configure()
+        self.vis = slam.SimpleOutput3DWrapper.getInstance()
+        self.set_visualization(self.vis)
+        print "got it"
         cdef slam.Matrix3f _K
         cdef float * K_d = _K.data()
 
@@ -177,8 +181,8 @@ cdef class Slam_Context:
         
         slam.depthSmoothingFactor = 1 # 0, 10
 
-    #def set_output_wrapper(self, output_wrapper):
-    #   self.thisptr.setVisualization(output_wrapper)
+    cdef set_visualization(self, slam.Output3DWrapper* output_wrapper):
+        self.thisptr.setVisualization(output_wrapper)
 
 cdef class Slam_Undistorter:
     cdef slam.Undistorter *thisptr
@@ -196,3 +200,43 @@ cdef class Slam_Undistorter:
         cdef np.ndarray[np.uint8_t,ndim=2] undistorted_image = np.zeros(self.get_output_size(),dtype=np.uint8)
         self.thisptr.undistort2(&raw_image[0,0], &undistorted_image[0,0])
         return undistorted_image
+    
+cdef class SimpleOutput3DWrapper(Output3DWrapper):
+    cdef slam.SimpleOutput3DWrapper *thisptr
+    
+    def __cinit__(self,camera_config_path):
+        pass
+    def __init__(self,camera_config_path):
+        self.thisptr = slam.SimpleOutput3DWrapper.getInstance()
+
+cdef class Output3DWrapper:
+    pass
+#     cdef slam.Output3DWrapper *thisptr
+#     
+#     def __cinit__(self):
+#         if type(self) is Output3DWrapper:
+#             self.thisptr = new slam.Output3DWrapper()
+#             print "constr"
+#             print self
+#     def __dealloc__(self):
+#         if type(self) is Output3DWrapper:
+#             print "destr"
+#             print self
+#             del self.thisptr
+    
+# cdef class SimpleOutput3DWrapper(Output3DWrapper):
+#     cdef slam.SimpleOutput3DWrapper *derptr
+#      
+#     def __cinit__(self):
+#         if type(self) is SimpleOutput3DWrapper:
+#             self.derptr = new slam.SimpleOutput3DWrapper()
+#             self.thisptr = self.derptr
+#             print "constr"
+#             self.derptr.test()
+#             print self
+#     def __dealloc__(self):
+#         if type(self) is SimpleOutput3DWrapper:
+#             print "destr"
+#             print self
+#             del self.derptr
+#             del self.thisptr
