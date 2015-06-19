@@ -1,4 +1,5 @@
 from libcpp.string cimport string
+from libcpp.vector cimport vector 
 from io_wrapper cimport Output3DWrapper
 
 cdef extern from "<Eigen/Eigen>" namespace "Eigen":
@@ -6,6 +7,13 @@ cdef extern from "<Eigen/Eigen>" namespace "Eigen":
         Matrix3f() except + 
         Matrix3f(int rows, int cols) except + 
         float * data()
+        
+cdef extern from "<sophus/se3.hpp>" namespace "Sophus":
+    cdef cppclass SE3f:
+        pass
+        
+cdef extern from "<util/SophusUtil.h>":
+    ctypedef SE3f SE3
         
 cdef extern from "<util/settings.h>" namespace "lsd_slam":
     # keystrokes
@@ -88,16 +96,31 @@ cdef extern from "SlamSystem.h" namespace "lsd_slam":
         pass
 
     cdef cppclass SlamSystem:
-        SlamSystem(int, int, Matrix3f, bool) except +
+        SlamSystem(int w, int h, Matrix3f K, bint enableSLAM) except +
+        
+        int width, height
+        Matrix3f K
+        const bint SLAMEnabled
+        bint trackingIsGood
         
         void randomInit(unsigned char* image, double timeStamp, int id)
+        void gtDepthInit(unsigned char* image, float* depth, double timeStamp, int id)
         void trackFrame(unsigned char* image, unsigned int frameID, bint blockUntilMapped, double timestamp) nogil
-        
         void finalize()
-        
-        void setVisualization(Output3DWrapper*)
-        
+        void optimizeGraph()        
         Frame* getCurrentKeyframe()
+        SE3 getCurrentPoseEstimation()
+        void setVisualization(Output3DWrapper*)
+        void requestDepthMapScreenshot(const string& filename)
+        bint doMappingIteration()
+        int findConstraintsForNewKeyFrames(Frame* newKeyFrame, bint forceParent=True, bint useFABMAP=True, float closeCandidatesTH=1.0)
+        bint optimizationIteration(int itsPerTry, float minChange)
+        void publishKeyframeGraph()
+        #vector[FramePoseStruct*, Eigen::aligned_allocator<lsd_slam::FramePoseStruct*> > getAllPoses();
+        
+        float msTrackFrame, msOptimizationIteration, msFindConstraintsItaration, msFindReferences
+        int nTrackFrame, nOptimizationIteration, nFindConstraintsItaration, nFindReferences
+        float nAvgTrackFrame, nAvgOptimizationIteration, nAvgFindConstraintsItaration, nAvgFindReferences
         
 cdef extern from "<util/Undistorter.h>" namespace "lsd_slam":
     cdef cppclass Undistorter:
